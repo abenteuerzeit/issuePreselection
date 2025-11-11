@@ -1,0 +1,51 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-11-10T12:00:00+00:00\n"
+"PO-Revision-Date: 2025-11-10T12:00:00+00:00\n"
+"Language: \n"
+
+msgid "plugins.generic.issuePreselection.displayName"
+msgstr "Issue Preselection Plugin"
+
+msgid "plugins.generic.issuePreselection.description"
+msgstr "Allows authors to preselect issue assignment during submission and automatically assigns preset editors."
+
+msgid "plugins.generic.issuePreselection.selectIssue"
+msgstr "Select Target Issue"
+
+msgid "plugins.generic.issuePreselection.issueLabel"
+msgstr "Assign to Issue"
+
+msgid "plugins.generic.issuePreselection.selectOption"
+msgstr "-- Select an Issue --"
+
+msgid "plugins.generic.issuePreselection.description.field"
+msgstr "Please select the issue for your submission. This will help editors route your manuscript to the appropriate reviewers."
+
+msgid "plugins.generic.issuePreselection.settings.isOpen"
+msgstr "Enable for Submission"
+
+msgid "plugins.generic.issuePreselection.settings.isOpenDescription"
+msgstr "Allow authors to select this issue during submission."
+
+msgid "plugins.generic.issuePreselection.settings.isOpenLabel"
+msgstr "Enable this issue for author selection"
+
+msgid "plugins.generic.issuePreselection.settings.editedBy"
+msgstr "Assigned Editors"
+
+msgid "plugins.generic.issuePreselection.settings.editedByDescription"
+msgstr "Select editors who will be automatically assigned to submissions for this issue."
+
+msgid "plugins.generic.issuePreselection.error.invalidIssue"
+msgstr "The selected issue is not available for submission."
+
+msgid "plugins.generic.issuePreselection.error.required"
+msgstr "Please select an issue for your submission."
