@@ -11,6 +11,7 @@ namespace APP\plugins\generic\issuePreselection\classes;
 use APP\core\Application;
 use APP\facades\Repo;
 use APP\plugins\generic\issuePreselection\IssuePreselectionPlugin;
+use PKP\context\Context;
 
 class IssueManagement
 {
@@ -32,20 +33,18 @@ class IssueManagement
     {
         $schema = &$params[0];
                 
-        $schema->properties->isOpen = (object) [
+        $schema->properties->{Constants::ISSUE_IS_OPEN} = (object) [
             'type' => 'boolean',
             'apiSummary' => false,
             'validation' => ['nullable']
         ];
         
-        $schema->properties->editedBy = (object) [
+        $schema->properties->{Constants::ISSUE_EDITED_BY} = (object) [
             'type' => 'array',
             'items' => (object) ['type' => 'integer'],
             'apiSummary' => false,
             'validation' => ['nullable']
         ];
-        
-        error_log("[IssuePreselection] Added isOpen and editedBy to issue schema");
         
         return false;
     }
@@ -57,12 +56,15 @@ class IssueManagement
      */
     public function addIssueFormFields(string $hookName, array $params): bool
     {
-        $hookParams = &$params[0];
         $smarty = $params[1];
         $output = &$params[2];
                 
         $request = Application::get()->getRequest();
         $context = $request->getContext();
+        
+        if (!$context) {
+            return false;
+        }
         
         $issueId = $request->getUserVar('issueId');
         $issue = null;
@@ -70,15 +72,11 @@ class IssueManagement
         $assignedEditors = [];
         
         if ($issueId) {
-            error_log("[IssuePreselection] Loading issue data for issue ID: " . $issueId);
             $issue = Repo::issue()->get($issueId);
             
             if ($issue) {
-                $isOpen = $issue->getData('isOpen') ? true : false;
-                $assignedEditors = $issue->getData('editedBy') ?: [];
-                error_log("[IssuePreselection] Loaded issue - isOpen: " . ($isOpen ? 'true' : 'false') . ", editors: " . json_encode($assignedEditors));
-            } else {
-                error_log("[IssuePreselection] Issue not found for ID: " . $issueId);
+                $isOpen = (bool) $issue->getData(Constants::ISSUE_IS_OPEN);
+                $assignedEditors = $issue->getData(Constants::ISSUE_EDITED_BY) ?: [];
             }
         }
         
@@ -104,20 +102,13 @@ class IssueManagement
     {
         $newIssue = &$params[0];
         $issue = $params[1];
-        $editParams = $params[2];
         
-        error_log("[IssuePreselection] beforeIssueEdit called for issue " . $issue->getId());
-        error_log("[IssuePreselection] Current issue data - isOpen: " . json_encode($issue->getData('isOpen')) . ", editedBy: " . json_encode($issue->getData('editedBy')));
-        error_log("[IssuePreselection] New issue data - isOpen: " . json_encode($newIssue->getData('isOpen')) . ", editedBy: " . json_encode($newIssue->getData('editedBy')));
-        
-        if ($newIssue->getData('isOpen') === null && $issue->getData('isOpen') !== null) {
-            $newIssue->setData('isOpen', $issue->getData('isOpen'));
-            error_log("[IssuePreselection] Preserved isOpen value");
+        if ($newIssue->getData(Constants::ISSUE_IS_OPEN) === null && $issue->getData(Constants::ISSUE_IS_OPEN) !== null) {
+            $newIssue->setData(Constants::ISSUE_IS_OPEN, $issue->getData(Constants::ISSUE_IS_OPEN));
         }
         
-        if ($newIssue->getData('editedBy') === null && $issue->getData('editedBy') !== null) {
-            $newIssue->setData('editedBy', $issue->getData('editedBy'));
-            error_log("[IssuePreselection] Preserved editedBy value");
+        if ($newIssue->getData(Constants::ISSUE_EDITED_BY) === null && $issue->getData(Constants::ISSUE_EDITED_BY) !== null) {
+            $newIssue->setData(Constants::ISSUE_EDITED_BY, $issue->getData(Constants::ISSUE_EDITED_BY));
         }
         
         return false;
@@ -129,13 +120,10 @@ class IssueManagement
      * @hook issueform::readuservars
      */
     public function readIssueFormData(string $hookName, array $params): bool
-    {        
-        $form = $params[0];
+    {
         $userVars = &$params[1];
-        $userVars[] = 'isOpen';
-        $userVars[] = 'editedBy';
-        
-        error_log("[IssuePreselection] Registered fields: isOpen, editedBy");
+        $userVars[] = Constants::ISSUE_IS_OPEN;
+        $userVars[] = Constants::ISSUE_EDITED_BY;
         
         return false;
     }
@@ -150,27 +138,20 @@ class IssueManagement
         $form = $params[0];
         
         if (!isset($form->issue) || !$form->issue) {
-            error_log("[IssuePreselection] No issue object found in form");
             return false;
         }
         
         $issue = $form->issue;
         
-        $isOpen = $form->getData('isOpen') ? true : false;
-        $editedBy = $form->getData('editedBy');
-        
-        error_log("[IssuePreselection] Form data - isOpen: " . ($isOpen ? 'true' : 'false') . ", editedBy: " . json_encode($editedBy));
-        error_log("[IssuePreselection] Issue before setting data - isOpen: " . json_encode($issue->getData('isOpen')) . ", editedBy: " . json_encode($issue->getData('editedBy')));
+        $isOpen = (bool) $form->getData(Constants::ISSUE_IS_OPEN);
+        $editedBy = $form->getData(Constants::ISSUE_EDITED_BY);
         
         if (!is_array($editedBy)) {
             $editedBy = $editedBy ? [$editedBy] : [];
         }
         
-        $issue->setData('isOpen', $isOpen);
-        $issue->setData('editedBy', $editedBy);
-        
-        error_log("[IssuePreselection] Issue after setting data - isOpen: " . json_encode($issue->getData('isOpen')) . ", editedBy: " . json_encode($issue->getData('editedBy')));
-        error_log("[IssuePreselection] Set issue data - issueId: " . ($issue->getId() ?: 'new') . ", isOpen: " . ($isOpen ? 'true' : 'false') . ", editedBy count: " . count($editedBy));
+        $issue->setData(Constants::ISSUE_IS_OPEN, $isOpen);
+        $issue->setData(Constants::ISSUE_EDITED_BY, $editedBy);
         
         return false;
     }
@@ -178,27 +159,30 @@ class IssueManagement
     /**
      * Get editor options for the select field
      */
-    public function getEditorOptions($context): array
-    {        
+    public function getEditorOptions(Context $context): array
+    {
         $editorIds = [];
+        $contextId = $context->getId();
         
-        $userCollector = Repo::user()->getCollector()
-            ->filterByContextIds([$context->getId()])
-            ->filterByRoleIds([ROLE_ID_MANAGER]);
+        $managers = Repo::user()->getCollector()
+            ->filterByContextIds([$contextId])
+            ->filterByRoleIds([ROLE_ID_MANAGER])
+            ->getMany();
         
-        foreach ($userCollector->getMany() as $user) {
+        foreach ($managers as $user) {
             $editorIds[$user->getId()] = $user->getFullName();
         }
         
-        $userCollector = Repo::user()->getCollector()
-            ->filterByContextIds([$context->getId()])
-            ->filterByRoleIds([ROLE_ID_SUB_EDITOR]);
+        $subEditors = Repo::user()->getCollector()
+            ->filterByContextIds([$contextId])
+            ->filterByRoleIds([ROLE_ID_SUB_EDITOR])
+            ->getMany();
         
-        foreach ($userCollector->getMany() as $user) {
-            $editorIds[$user->getId()] = $user->getFullName();
+        foreach ($subEditors as $user) {
+            if (!isset($editorIds[$user->getId()])) {
+                $editorIds[$user->getId()] = $user->getFullName();
+            }
         }
-        
-        error_log("[IssuePreselection] Found " . count($editorIds) . " editors/managers");
         
         return $editorIds;
     }
@@ -208,8 +192,6 @@ class IssueManagement
      */
     public function getOpenFutureIssues(int $contextId): array
     {
-        error_log("[IssuePreselection] getOpenFutureIssues called for context: " . $contextId);
-        
         $collector = Repo::issue()->getCollector()
             ->filterByContextIds([$contextId])
             ->filterByPublished(false);
@@ -218,13 +200,10 @@ class IssueManagement
         
         $openIssues = [];
         foreach ($issues as $issue) {
-            if ($issue->getData('isOpen') === true) {
+            if ($issue->getData(Constants::ISSUE_IS_OPEN) === true) {
                 $openIssues[] = $issue;
-                error_log("[IssuePreselection] Issue " . $issue->getId() . " is open");
             }
         }
-        
-        error_log("[IssuePreselection] Returning " . count($openIssues) . " open issues");
         
         return $openIssues;
     }
