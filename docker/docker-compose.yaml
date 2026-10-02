@@ -1,0 +1,44 @@
+services:
+    db:
+        image: mariadb:10.5.29
+        container_name: ojs-mariadb
+        restart: unless-stopped
+        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+            MYSQL_DATABASE: ${MYSQL_DATABASE:-ojs}
+            MYSQL_USER: ${MYSQL_USER:-ojsuser}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD:-ojspassword}
+        ports:
+            - "3306:3306"
+        volumes:
+            - ojs-db-data:/var/lib/mysql
+            - ../database.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+    ojs:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                OJS_VERSION: stable-3_5_0
+        container_name: ojs-app
+        restart: unless-stopped
+        depends_on:
+            - db
+        ports:
+            - "80:80"
+        environment:
+            OJS_DB_HOST: ${OJS_DB_HOST:-db}
+            OJS_DB_USER: ${OJS_DB_USER:-ojsuser}
+            OJS_DB_PASSWORD: ${OJS_DB_PASSWORD:-ojspassword}
+            OJS_DB_NAME: ${OJS_DB_NAME:-ojs}
+            OJS_BASE_URL: ${OJS_BASE_URL:-http://localhost}
+        volumes:
+            - ..:/var/www/html/plugins/generic/issuePreselection
+            - ojs-files:/var/www/files
+            - ojs-public:/var/www/html/public
+
+volumes:
+    ojs-db-data:
+    ojs-files:
+    ojs-public:

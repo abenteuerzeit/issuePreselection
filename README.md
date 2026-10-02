@@ -13,6 +13,7 @@
 - [Configuration](#configuration)
   - [Setting Up Issues](#setting-up-issues)
   - [Author Submission Workflow](#author-submission-workflow)
+
 - [Technical Details](#technical-details)
 - [Development](#development)
 - [Support](#support)
@@ -195,27 +196,97 @@ Uses OJS's existing settings tables (no database migrations required):
 | `Issue::edit`                                              | Preserve custom data during edits           |
 | `Schema::get::submission`                                  | Add preselectedIssueId to submission schema |
 | `Form::config::after`                                      | Add issue selector to submission wizard     |
-| `Submission::getSubmissionsListProps`                      | Include field in Vue state                  |
 | `Template::SubmissionWizard::Section::Review::Editors`     | Display in review section                   |
 | `Submission::validateSubmit`                               | Process assignment on submission            |
 
 ## Development
+
+The repository includes a Docker-based OJS 3.5 development environment.
+
+### Requirements
+
+- Docker
+- Docker Compose
+- Node.js and npm
+
+### Start the Development Environment
+
+Build and start OJS with MariaDB:
+
+```bash
+npm start
+```
+
+This builds the OJS container, starts the database, and sets the required file
+permissions.
+
+OJS is available at:
+
+```text
+http://localhost
+```
+
+The Docker environment provides:
+
+- OJS 3.5.0
+- PHP 8.2
+- MariaDB 10.5
+- Node.js 20
+- Cypress
+- Persistent Docker volumes for the database and OJS files
+
+### Docker Commands
+
+Build and start the containers:
+
+```bash
+npm run build:docker
+```
+
+Reset and rebuild the containers:
+
+```bash
+npm run reset:docker
+```
+
+The reset command removes and recreates the containers but preserves Docker
+volumes, including the database.
+
+Set OJS file permissions:
+
+```bash
+npm run set:permissions
+```
+
+### Testing
+
+The plugin includes Cypress end-to-end tests.
+
+Run the tests:
+
+```bash
+npm test
+```
+
+Open Cypress interactively:
+
+```bash
+npm run test:open
+```
+
+### Formatting
+
+Format the plugin source:
+
+```bash
+npm run format
+```
 
 ### Adding Translations
 
 1. Copy `locale/en/locale.po` to `locale/{locale_code}/locale.po`
 2. Translate the strings
 3. Submit a pull request
-
-### Testing
-
-The plugin includes Cypress end-to-end tests. To run them:
-
-```bash
-npx cypress run --config-file plugins/generic/issuePreselection/cypress.json
-```
-
-See `cypress/README.md` for more details.
 
 ### Debugging
 
@@ -225,6 +296,18 @@ Enable error logging in `config.inc.php`:
 [debug]
 show_stacktrace = On
 display_errors = On
+```
+
+OJS and Apache logs can be inspected with:
+
+```bash
+docker compose -f docker/docker-compose.yaml logs -f ojs
+```
+
+For the error log specifically:
+
+```bash
+docker compose -f docker/docker-compose.yaml exec ojs tail -f /var/log/apache2/error.log
 ```
 
 The plugin logs extensively with `[IssuePreselection]` prefix.

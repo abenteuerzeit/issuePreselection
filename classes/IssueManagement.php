@@ -179,9 +179,8 @@ class IssueManagement extends BaseManagement
      *
      * @return bool Always returns false to continue hook processing
      */
-    public function readIssueFormData(string $hookName, array &$params): bool
+    public function readIssueFormData(string $hookName, array $params): bool
     {
-        // $params is passed by reference and modified to register custom fields
         $params[1][] = Constants::ISSUE_IS_OPEN;
         $params[1][] = Constants::ISSUE_EDITED_BY;
         return false;

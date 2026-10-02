@@ -52,25 +52,6 @@ class SubmissionManagement extends BaseManagement
     }
 
     /**
-     * Add preselectedIssueId to submission list props
-     *
-     * Ensures the preselected issue ID is included in the submission list
-     * properties so it can be displayed in submission listings.
-     *
-     * @hook Submission::getSubmissionsListProps
-     *
-     * @param string $hookName The name of the hook being called
-     * @param array $params Hook parameters [&$props]
-     *
-     * @return bool Always returns false to continue hook processing
-     */
-    public function addSubmissionListProps(string $hookName, array &$params): bool
-    {
-        $params[0][] = Constants::SUBMISSION_PRESELECTED_ISSUE_ID;
-        return false;
-    }
-
-    /**
      * Add issue preselection field to submission schema
      *
      * Adds the preselectedIssueId property to the submission schema,

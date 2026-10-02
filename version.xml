@@ -12,8 +12,8 @@
 <version>
     <application>issuePreselection</application>
     <type>plugins.generic</type>
-    <release>1.6.0.4</release>
-    <date>2024-11-18</date>
+    <release>1.6.0.5</release>
+    <date>2026-10-02</date>
     <lazy-load>1</lazy-load>
     <class>IssuePreselectionPlugin</class>
 </version>

@@ -48,16 +48,16 @@ describe("Issue Management", function () {
     };
 
     it("Plugin is installed and can be enabled", function () {
-        cy.login('admin', 'admin');
-        cy.visit('/index.php/publicknowledge/management/settings/website');
+        cy.login("admin", "admin");
+        cy.visit("/index.php/publicknowledge/management/settings/website");
         cy.wait(2000);
 
         // Navigate to plugins
-        cy.get('button').contains('Plugins').click();
+        cy.get("button").contains("Plugins").click();
         cy.wait(1000);
 
         // Check if plugin is enabled
-        cy.get('input[id^="select-cell-issuepreselection"]').should('exist');
+        cy.get('input[id^="select-cell-issuepreselection"]').should("exist");
     });
 
     it.skip("Adds custom fields to issue form", function () {

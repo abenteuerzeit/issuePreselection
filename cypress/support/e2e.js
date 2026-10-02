@@ -16,5 +16,4 @@
 // Import plugin-specific commands
 import "./commands";
 
-require('cypress-failed-log');
-
+require("cypress-failed-log");

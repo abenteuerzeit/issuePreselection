@@ -99,7 +99,6 @@ class IssuePreselectionPlugin extends GenericPlugin
     {
         Hook::add("Schema::get::submission", [$submissionManagement, "addToSubmissionSchema"]);
         Hook::add("Form::config::after", [$submissionManagement, "addToSubmissionForm"]);
-        Hook::add("Submission::getSubmissionsListProps", [$submissionManagement, "addSubmissionListProps"]);
         Hook::add("Template::SubmissionWizard::Section::Review::Editors", [
             $submissionManagement,
             "addIssueReviewSection",

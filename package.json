@@ -1,17 +1,23 @@
 {
     "name": "issue-preselection-plugin",
-    "version": "1.5.4",
+    "version": "1.5.5",
     "private": true,
     "scripts": {
-        "test": "cypress run",
-        "test:open": "cypress open",
         "build": "build.cmd",
-        "release": "npm run build"
+        "build:docker": "docker compose -f docker/docker-compose.yaml up -d --build",
+        "format": "prettier --write .",
+        "release": "npm run build",
+        "reset:docker": "docker compose -f docker/docker-compose.yaml down && docker compose -f docker/docker-compose.yaml up -d --build",
+        "set:permissions": "docker compose -f docker/docker-compose.yaml exec ojs chown -R www-data:www-data /var/www/html/cache /var/www/html/public /var/www/files",
+        "start": "npm run build:docker && npm run set:permissions",
+        "test": "cypress run",
+        "test:open": "cypress open"
     },
     "devDependencies": {
         "@faker-js/faker": "^10.1.0",
         "@prettier/plugin-php": "^0.24.0",
         "cypress": "^13.0.0",
+        "cypress-failed-log": "^2.10.0",
         "prettier": "3.6.2"
     }
 }

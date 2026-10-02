@@ -11,8 +11,8 @@ Cypress.Commands.add("login", (username, password, context) => {
     cy.visit(`/index.php/${context}/login/signOut`, { failOnStatusCode: false });
     cy.visit(`/index.php/${context}/login`);
     cy.wait(1000);
-    cy.get('input[name="username"]').type(username, {delay: 0});
-    cy.get('input[name="password"]').type(password, {delay: 0});
+    cy.get('input[name="username"]').type(username, { delay: 0 });
+    cy.get('input[name="password"]').type(password, { delay: 0 });
     cy.get('button[type="submit"]').click();
     cy.wait(2000);
 });
@@ -96,16 +96,16 @@ Cypress.Commands.add("uploadPlugin", (pluginPath) => {
     cy.getContext().then((context) => {
         cy.visit(`/index.php/${context}/management/settings/website#plugins`);
         cy.wait(2000);
-        
+
         // Scroll to reveal the Upload Plugin button
         cy.get('button:contains("Upload A New Plugin")').scrollIntoView();
         cy.get('button:contains("Upload A New Plugin")').click();
         cy.wait(1000);
-        
+
         // Upload the plugin file
         cy.get('input[type="file"]').selectFile(pluginPath, { force: true });
         cy.wait(1000);
-        
+
         // Click save/upload button
         cy.get('button:contains("Save"), button:contains("Upload")').click();
         cy.wait(3000);
@@ -117,7 +117,7 @@ Cypress.Commands.add("enablePlugin", (pluginName) => {
     cy.getContext().then((context) => {
         cy.visit(`/index.php/${context}/management/settings/website#plugins`);
         cy.wait(2000);
-        
+
         // Find and enable the plugin
         cy.get(`input[id*="${pluginName}"]`).check({ force: true });
         cy.wait(2000);
