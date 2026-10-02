@@ -14,9 +14,15 @@
 namespace APP\plugins\generic\issuePreselection;
 
 use APP\core\Application;
+use APP\facades\Repo;
+use APP\plugins\generic\issuePreselection\classes\Constants;
+use APP\plugins\generic\issuePreselection\classes\IssueGridColumnsFeature;
 use APP\plugins\generic\issuePreselection\classes\IssueManagement;
 use APP\plugins\generic\issuePreselection\classes\SubmissionManagement;
+use APP\template\TemplateManager;
 use Exception;
+use PKP\core\JSONMessage;
+use PKP\db\DAO;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
 
@@ -82,6 +88,7 @@ class IssuePreselectionPlugin extends GenericPlugin
         Hook::add("issueform::readuservars", [$issueManagement, "readIssueFormData"]);
         Hook::add("issueform::execute", [$issueManagement, "saveIssueFormData"]);
         Hook::add("Issue::edit", [$issueManagement, "beforeIssueEdit"]);
+        Hook::add("futureissuegridhandler::initfeatures", [IssueGridColumnsFeature::class, "register"]);
     }
 
     /**
@@ -104,6 +111,54 @@ class IssuePreselectionPlugin extends GenericPlugin
             "addIssueReviewSection",
         ]);
         Hook::add("Submission::validateSubmit", [$submissionManagement, "handleSubmissionValidate"]);
+    }
+
+    /**
+     * Handle plugin manage() requests — toggleOpen and issuePreselectionEditors verbs
+     *
+     * @copydoc Plugin::manage()
+     *
+     * @param array $args Request arguments
+     * @param \APP\core\Request $request The current request
+     *
+     * @return JSONMessage
+     */
+    public function manage($args, $request): JSONMessage
+    {
+        $verb = $request->getUserVar("verb");
+
+        if ($verb === "toggleOpen") {
+            $issue = Repo::issue()->get((int) $request->getUserVar("issueId"), $request->getContext()?->getId());
+            if (!$issue || !$request->checkCSRF()) {
+                return new JSONMessage(false);
+            }
+            Repo::issue()->edit($issue, [Constants::ISSUE_IS_OPEN => !$issue->getData(Constants::ISSUE_IS_OPEN)]);
+            return DAO::getDataChangedEvent($issue->getId());
+        }
+
+        if ($verb === "issuePreselectionEditors") {
+            $issueManagement = new IssueManagement($this);
+            $issueId = (int) $request->getUserVar("issueId");
+            $issue = $issueId ? Repo::issue()->get($issueId, $request->getContext()?->getId()) : null;
+
+            if ($request->isPost()) {
+                if (!$issue || !$request->checkCSRF()) {
+                    return new JSONMessage(false);
+                }
+                if ($issue->getData(Constants::ISSUE_IS_OPEN)) {
+                    $editedBy = $request->getUserVar("editedBy") ?? [];
+                    $editedBy = is_array($editedBy)
+                        ? array_values(array_filter(array_map("intval", $editedBy), fn($id) => $id > 0))
+                        : [];
+                    Repo::issue()->edit($issue, [Constants::ISSUE_EDITED_BY => $editedBy]);
+                }
+                return DAO::getDataChangedEvent($issueId);
+            }
+
+            return new JSONMessage(true, $issueManagement->renderEditorAssignPanel($request));
+        }
+
+        return parent::manage($args, $request);
     }
 
     /**

@@ -29,6 +29,7 @@ REM Copy necessary files and directories
 xcopy /E /I /Y classes %TEMP_DIR%\classes
 xcopy /E /I /Y locale %TEMP_DIR%\locale
 xcopy /E /I /Y templates %TEMP_DIR%\templates
+if exist styles xcopy /E /I /Y styles %TEMP_DIR%\styles
 copy /Y IssuePreselectionPlugin.php %TEMP_DIR%\
 copy /Y version.xml %TEMP_DIR%\
 copy /Y index.php %TEMP_DIR%\

@@ -1,0 +1,27 @@
+--- a/cypress/support/commands.js
++++ b/cypress/support/commands.js
+@@ -109,11 +109,13 @@
+ });
+ 
+ Cypress.Commands.add("openFirstIssue", () => {
++    cy.intercept("GET", "**/future-issue-grid/edit-issue?issueId=*").as("issueEditLoad");
+     cy.get("#futureIssuesGridContainer tr.gridRow", { timeout: 15000 })
+         .first()
+         .find("a.pkp_linkaction_edit")
+         .first()
+         .click({ force: true });
++    cy.wait("@issueEditLoad", { timeout: 15000 });
+     cy.location("pathname", { timeout: 15000 }).should("include", "/manageIssues");
+     cy.get("#editIssueTabs", { timeout: 15000 }).should("exist");
+     cy.openIssueDataTab();
+--- a/cypress/tests/functional/SubmissionWizard.cy.js
++++ b/cypress/tests/functional/SubmissionWizard.cy.js
+@@ -170,7 +170,7 @@
+             reviewStepReached();
+             shot("6-validation-success");
+             submit().then((submissionId) => {
+-                cy.loginAsEditor();
++                cy.loginAsAdmin();
+                 cy.getContext().then((context) => {
+                     cy.visit(
+                         `/index.php/${context}/dashboard/editorial` +

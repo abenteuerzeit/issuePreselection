@@ -94,17 +94,16 @@ abstract class BaseManagement
     }
 
     /**
-     * Get all editors (managers and sub-editors) for a context
+     * Get detailed editor information (managers and sub-editors) for a context
      *
      * Retrieves all managers and sub-editors for the given context
-     * to populate editor selection dropdowns. Uses the null coalescing
-     * assignment operator to avoid duplicate entries.
+     * with their full details (ID, full name, initials, user group/role name).
      *
      * @param Context $context The journal/press context
      *
-     * @return array Associative array mapping user ID to full name
+     * @return array Array of editor detail arrays
      */
-    protected function getEditorOptions(Context $context): array
+    public function getEditorList(Context $context): array
     {
         $editors = [];
 
@@ -116,11 +115,22 @@ abstract class BaseManagement
                 ->getMany();
 
             foreach ($users as $user) {
-                $editors[$user->getId()] ??= $user->getFullName();
+                $userGroup = $this->getEditorUserGroup($context->getId(), $user->getId());
+                $editors[$user->getId()] ??= [
+                    "id" => $user->getId(),
+                    "fullName" => $user->getFullName(),
+                    "initials" =>
+                        mb_strtoupper(
+                            mb_substr($user->getLocalizedGivenName() ?? "", 0, 1) .
+                                mb_substr($user->getLocalizedFamilyName() ?? "", 0, 1),
+                        ) ?:
+                        "U",
+                    "roleName" => $userGroup?->getLocalizedData("name") ?? "",
+                ];
             }
         }
 
-        return $editors;
+        return array_values($editors);
     }
 
     /**

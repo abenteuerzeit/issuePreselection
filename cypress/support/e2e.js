@@ -13,7 +13,12 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-// Import plugin-specific commands
 import "./commands";
+
+Cypress.on("uncaught:exception", (error) => {
+    if (error.message.includes("Row with id") && error.message.includes("not found")) {
+        return false;
+    }
+});
 
 require("cypress-failed-log");

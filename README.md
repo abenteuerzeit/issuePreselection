@@ -1,6 +1,6 @@
 # Issue Preselection Plugin for OJS 3.5+
 
-[![Release](https://img.shields.io/badge/release-1.0.0-blue.svg)](https://github.com/yourusername/ojs-issue-preselection/releases)
+[![Release](https://img.shields.io/badge/release-1.6.0.6-blue.svg)](https://github.com/abenteuerzeit/issuePreselection/releases)
 [![OJS](https://img.shields.io/badge/OJS-3.5.0.1+-green.svg)](https://pkp.sfu.ca/ojs/)
 [![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
 
@@ -78,92 +78,94 @@ Then enable via the OJS admin interface as described above.
 
 ### Setting Up Issues
 
-**Step 1: Navigate to Future Issues**
+#### Step 1: Navigate to Future Issues
 
-Navigate to **Issues > Future Issues**
+Navigate to **Issues > Future Issues**.
 
-<img width="800" alt="Issues Future Issues" src="https://github.com/user-attachments/assets/4272ef1f-99c8-41a2-82b8-6635df05a892" />
+![Future Issues overview](./docs/images/issues-overview.png)
 
-**Step 2: Create or Edit an Issue**
+#### Step 2: Create or Edit an Issue
 
-Click **Create** or **Edit** on an issue you want to configure
+Click **Create Issue** or edit an issue you want to configure.
 
-<img width="800" alt="Create or Edit Issue" src="https://github.com/user-attachments/assets/87174d46-2cea-44f8-a2a1-17da128cb721" />
+![Editor assignment controls for an issue](./docs/images/issue-editor-assignment-modal.png)
 
 **Edit** is shown after expanding the view by clicking on the triangular bullet
 to the left of the issue. You can also click on the name directly.
 
-<img width="800" alt="Issue Options" src="https://github.com/user-attachments/assets/a5bb768d-a66b-4de7-861f-681eea1ec99f" />
+For a new issue, editors can be assigned before the first save:
 
-**Step 3: Configure Issue Data**
+![Editors selected before saving a new issue](./docs/images/issue-editor-assignment.png)
 
-You'll see two new fields under **Issue Data**
+#### Step 3: Configure Issue Data
 
-<img width="800" alt="Issue Data Fields" src="https://github.com/user-attachments/assets/cfa5bb5e-c359-44a3-bddd-73e04fbc0d60" />
+You'll see two new fields under **Issue Data**.
+
+![Issue Data editor assignments](./docs/images/issue-editor-assignment-saved.png)
 
 - **Enable for Submission**: Check to make this issue available for author
-  selection
+  selection.
 - **Assigned Editors (Optional)**: Select one or more editors to automatically
-  assign to submissions
+  assign to submissions.
 
 > Updates to editor assignments under the issue data tab apply to all active
 > submissions assigned to an issue and not scheduled for publication.
 
-**Step 4: Save Changes**
+#### Step 4: Save Changes
 
-Click **Save**
+Click **Save**.
 
 ### Author Submission Workflow
 
-**Step 1: Start New Submission**
+#### Step 1: Start New Submission
 
-Author clicks "New Submission"
+Author clicks "New Submission".
 
-**Step 2: View Issue Selection**
+#### Step 2: View Issue Selection
 
-In the "For the Editors" step, they see an "Issue Selection" dropdown
+In the "For the Editors" step, they see an "Issue Selection" dropdown.
 
-<img width="800" alt="Issue Selection Dropdown" src="https://github.com/user-attachments/assets/d7190468-beb8-4302-9964-9a888f5b724d" />
+![Issue selection in the Submission Wizard](./docs/images/submission-wizard-issue-selection.png)
 
-**Step 3: Select Target Issue**
+#### Step 3: Select Target Issue
 
-Author selects the target issue
+Author selects the target issue.
 
-<img width="800" alt="Target Issue Selection" src="https://github.com/user-attachments/assets/c76d480b-bb46-473d-8630-ddae10c78fff" />
+![Target Issue Selection](https://github.com/user-attachments/assets/c76d480b-bb46-473d-8630-ddae10c78fff)
 
-**Step 4: Validation - Missing Issue Selection**
+#### Step 4: Validation - Missing Issue Selection
 
-If the author does not select an issue, an error notification appears
+If the author does not select an issue, an error notification appears.
 
-<img width="800" alt="Error Notification" src="https://github.com/user-attachments/assets/49c0a0f2-5e78-4fe5-a8cd-9f3ec14c86fe" />
+![Error Notification](https://github.com/user-attachments/assets/49c0a0f2-5e78-4fe5-a8cd-9f3ec14c86fe)
 
-**Step 5: Navigation - Back Button**
+#### Step 5: Navigation - Back Button
 
-On clicking Back
+On clicking Back.
 
-<img width="800" alt="Back Navigation" src="https://github.com/user-attachments/assets/d0625957-06c3-440f-95b4-f1f995dc5694" />
+![Back Navigation](https://github.com/user-attachments/assets/d0625957-06c3-440f-95b4-f1f995dc5694)
 
-**Step 6: Validation - Success**
+#### Step 6: Validation - Success
 
-Successful validation
+Successful validation.
 
-<img width="800" alt="Successful Validation" src="https://github.com/user-attachments/assets/472fce93-b549-48bb-a47d-4b903e253fef" />
+![Successful Validation](https://github.com/user-attachments/assets/472fce93-b549-48bb-a47d-4b903e253fef)
 
-**Step 7: Publication Scheduled**
+#### Step 7: Publication Scheduled
 
-Upon submission, publication is scheduled to the selected issue
+Upon submission, publication is scheduled to the selected issue.
 
-<img width="800" alt="Publication Scheduled" src="https://github.com/user-attachments/assets/d540f744-3ccc-418a-8002-76e59a6566d2" />
+![Publication Scheduled](https://github.com/user-attachments/assets/d540f744-3ccc-418a-8002-76e59a6566d2)
 
-**Step 8: Guest Editors Added**
+#### Step 8: Guest Editors Added
 
-All pre-assigned editors are added as Guest Editors
+All pre-assigned editors are added as Guest Editors.
 
-<img width="400" alt="Guest Editors Added" src="https://github.com/user-attachments/assets/8fd7ef5b-319c-4dc8-8e43-e9d94a763523" />
+![Guest Editors Added](https://github.com/user-attachments/assets/8fd7ef5b-319c-4dc8-8e43-e9d94a763523)
 
-**Step 9: Notifications Sent**
+#### Step 9: Notifications Sent
 
-Editors receive notifications
+Editors receive notifications.
 
 ## Technical Details
 
@@ -187,27 +189,48 @@ Uses OJS's existing settings tables (no database migrations required):
 
 ### Hooks Used
 
-| Hook                                                       | Purpose                                     |
-| ---------------------------------------------------------- | ------------------------------------------- |
-| `Schema::get::issue`                                       | Add custom fields to issue schema           |
-| `Templates::Editor::Issues::IssueData::AdditionalMetadata` | Extend issue form                           |
-| `issueform::readuservars`                                  | Register custom form variables              |
-| `issueform::execute`                                       | Save custom issue settings                  |
-| `Issue::edit`                                              | Preserve custom data during edits           |
-| `Schema::get::submission`                                  | Add preselectedIssueId to submission schema |
-| `Form::config::after`                                      | Add issue selector to submission wizard     |
-| `Template::SubmissionWizard::Section::Review::Editors`     | Display in review section                   |
-| `Submission::validateSubmit`                               | Process assignment on submission            |
+- `Schema::get::issue` — Add custom fields to issue schema.
+- Templates::Editor::Issues::IssueData::AdditionalMetadata — Extend the issue
+  form.
+- `issueform::readuservars` — Register custom form variables.
+- `issueform::execute` — Save custom issue settings.
+- `Issue::edit` — Preserve custom data during edits.
+- `Schema::get::submission` — Add `preselectedIssueId` to the submission schema.
+- `Form::config::after` — Add the issue selector to the submission wizard.
+- Template::SubmissionWizard::Section::Review::Editors — Display the issue in
+  the review section.
+- `Submission::validateSubmit` — Process issue assignment on submission.
 
 ## Development
 
 The repository includes a Docker-based OJS 3.5 development environment.
 
-### Requirements
+### Development Requirements
 
 - Docker
 - Docker Compose
 - Node.js and npm
+
+### Environment Setup
+
+Create a `.env` file in the project root before starting Docker. The compose
+file reads the database and URL settings from this file.
+
+```dotenv
+MYSQL_ROOT_PASSWORD=rootpassword
+MYSQL_DATABASE=ojs
+MYSQL_USER=ojsuser
+MYSQL_PASSWORD=ojspassword
+
+OJS_DB_HOST=db
+OJS_DB_USER=ojsuser
+OJS_DB_PASSWORD=ojspassword
+OJS_DB_NAME=ojs
+OJS_BASE_URL=http://localhost
+```
+
+If you do not want to change the defaults, you can reuse the existing `.env`
+file in this repository.
 
 ### Start the Development Environment
 
@@ -267,6 +290,16 @@ Run the tests:
 ```bash
 npm test
 ```
+
+The issue-management tests are split by scope:
+
+- `cypress/tests/functional/IssueOverview.cy.js` covers the Future Issues grid
+  and editor-assignment controls.
+- `cypress/tests/functional/IssueDataForm.cy.js` covers issue form behavior,
+  creation-time assignments, and persistence.
+
+README screenshots are stored in `docs/images/`. Cypress screenshots and failure
+logs are generated under `cypress/`.
 
 Open Cypress interactively:
 

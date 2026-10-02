@@ -16,6 +16,7 @@ namespace APP\plugins\generic\issuePreselection\classes;
 use APP\controllers\grid\issues\form\IssueForm;
 use APP\facades\Repo;
 use APP\issue\Issue;
+use APP\template\TemplateManager;
 use PKP\context\Context;
 
 class IssueManagement extends BaseManagement
@@ -109,9 +110,45 @@ class IssueManagement extends BaseManagement
     {
         return [
             "issuePreselectionIsOpen" => $this->getIssueOpenStatus($issue),
+            "issuePreselectionCanAssign" => !$issue || $this->getIssueOpenStatus($issue),
             "issuePreselectionEditors" => $this->getIssueEditors($issue),
-            "issuePreselectionEditorOptions" => $this->getEditorOptions($context),
+            "issuePreselectionAllEditors" => $this->getEditorList($context),
         ];
+    }
+
+    /**
+     * Get template data for the editor assignment panel modal
+     *
+     * Public wrapper used by IssuePreselectionPlugin::manage() to render
+     * the dedicated editor-assign mini-modal without duplicating logic.
+     *
+     * @param Issue|null $issue
+     * @param Context $context
+     *
+     * @return array
+     */
+    public function getEditorPanelData(?Issue $issue, Context $context): array
+    {
+        return $this->prepareIssueFormData($issue, $context);
+    }
+
+    /**
+     * Render the editor assignment panel template for the mini-modal GET request
+     *
+     * @param \APP\core\Request $request
+     *
+     * @return string Rendered HTML
+     */
+    public function renderEditorAssignPanel(\APP\core\Request $request): string
+    {
+        $context = $request->getContext();
+        $issueId = (int) $request->getUserVar("issueId");
+        $issue = $issueId ? Repo::issue()->get($issueId, $context?->getId()) : null;
+
+        $smarty = TemplateManager::getManager($request);
+        $smarty->assign($this->getEditorPanelData($issue, $context));
+        $smarty->assign("issueId", $issueId);
+        return $this->renderTemplate($smarty, "editorAssignPanel.tpl");
     }
 
     /**
@@ -213,7 +250,10 @@ class IssueManagement extends BaseManagement
         $oldEditors = $issue->getData(Constants::ISSUE_EDITED_BY) ?: [];
 
         $this->saveIssueOpenStatus($issue, $form);
-        $this->saveIssueEditors($issue, $form);
+        $isCreatingIssue = !$this->getRequest()->getUserVar("issueId");
+        if ($issue->getData(Constants::ISSUE_IS_OPEN) || $isCreatingIssue) {
+            $this->saveIssueEditors($issue, $form);
+        }
 
         $newEditors = $issue->getData(Constants::ISSUE_EDITED_BY) ?: [];
 

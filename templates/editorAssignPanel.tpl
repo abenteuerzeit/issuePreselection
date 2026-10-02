@@ -1,39 +1,34 @@
 {**
- * templates/issueFormFields.tpl
+ * templates/editorAssignPanel.tpl
  *
  * Copyright (c) 2017-2023 Simon Fraser University
  * Copyright (c) 2017-2023 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * Additional fields for issue form
+ * Editor assignment panel — rendered in the mini-modal from the future issues grid.
+ * Does NOT include isOpen checkbox or issue data fields.
  *}
-<div class="section">
-    <ul class="checkbox_and_radiobutton">
-        <li>
-            <label>
-                <input type="checkbox"
-                       id="isOpen"
-                       name="isOpen"
-                       value="1"
-                       {if $issuePreselectionIsOpen}checked="checked"{/if}
-                       class="field checkbox">
-                {translate key="plugins.generic.issuePreselection.settings.isOpenLabel"}
-            </label>
-        </li>
-    </ul>
-    <span>
-        <label class="sub_label" for="isOpen">
-            {translate key="plugins.generic.issuePreselection.settings.isOpenDescription"}
-        </label>
-    </span>
-</div>
+<form method="post" id="issueEditorAssignForm" class="pkp_form">
+    {csrf}
+    <input type="hidden" name="verb"     value="issuePreselectionEditors">
+    <input type="hidden" name="plugin"   value="issuepreselectionplugin">
+    <input type="hidden" name="category" value="generic">
+    <input type="hidden" name="issueId"  value="{$issueId|escape}">
 
-<div class="section">
-    <style>
-        #issuePreselectionParticipantManager:disabled { opacity: .6; pointer-events: none; }
-        #issuePreselectionParticipantManager:disabled summary { pointer-events: none; }
-    </style>
-    <fieldset class="border border-light m-0 p-0 min-w-0" id="issuePreselectionParticipantManager" {if !$issuePreselectionCanAssign}disabled{/if}>
+    <div class="section">
+        {if $issuePreselectionIsOpen}
+            <p class="pkp_notification">
+                {translate key="plugins.generic.issuePreselection.grid.isOpen"}
+            </p>
+        {else}
+            <p class="pkp_notification">
+                {translate key="plugins.generic.issuePreselection.grid.isClosed"}
+            </p>
+        {/if}
+    </div>
+
+    <div class="section">
+    <fieldset class="border border-light m-0 p-0 min-w-0" id="issuePreselectionParticipantManager" {if !$issuePreselectionIsOpen}disabled{/if}>
         <div class="flex items-start justify-between bg-default p-5">
             <div>
                 <h3 class="text-2xl-bold uppercase text-heading">
@@ -43,8 +38,7 @@
             </div>
             <details id="issuePreselectionAssign" class="relative">
                 <summary id="issuePreselectionAssignBtn"
-                         class="pkpButton inline-flex items-center text-lg-semibold text-primary border-light hover:text-hover bg-secondary py-[0.4375rem] px-3 border rounded cursor-pointer"
-                         style="list-style: none;">
+                         class="pkpButton inline-flex items-center text-lg-semibold text-primary border-light hover:text-hover bg-secondary py-[0.4375rem] px-3 border rounded cursor-pointer">
                     {translate key="common.assign"}
                 </summary>
                 <label for="issuePreselectionEditorSelect" class="pkp_screen_reader">
@@ -96,6 +90,8 @@
     <script type="text/javascript">
         (function() {
             const $ = id => document.getElementById(id);
+            const list = $('issuePreselectionParticipantsList');
+            if (!list) return;
             const toggle = (id, on) => {
                 const li = list.querySelector('li[data-editor-id="' + id + '"]');
                 if (!li) return;
@@ -103,19 +99,21 @@
                 li.querySelector('input').disabled = !on;
                 $('issuePreselectionNoParticipants').hidden = !!list.querySelector('li[data-editor-id]:not([hidden])');
             };
-            const list = $('issuePreselectionParticipantsList');
             const sel = $('issuePreselectionEditorSelect');
             if (sel) sel.addEventListener('change', e => {
                 if (e.target.value) toggle(e.target.value, true);
                 e.target.value = '';
                 $('issuePreselectionAssign').open = false;
             });
-            if (list) list.addEventListener('click', e => {
+            list.addEventListener('click', e => {
                 const li = e.target.closest('.issuePreselectionRemoveBtn')?.closest('li');
                 if (li) toggle(li.dataset.editorId, false);
             });
-            $('isOpen').addEventListener('change', e => $('issuePreselectionParticipantManager').disabled = !e.target.checked);
         })();
     </script>
     {/literal}
-</div>
+    </div>
+
+    {assign var="submitDisabled" value=!$issuePreselectionIsOpen}
+    {fbvFormButtons submitText="common.save" hideCancel=true submitDisabled=$submitDisabled}
+</form>

@@ -11,6 +11,8 @@
 Thumbs.db
 
 *.log
+**/logs/
+**/screenshots/
 
 *.tmp
 *.bak
@@ -20,3 +22,7 @@ dist/
 
 *.env*
 init.sql
+
+.agents/
+.claude/
+.junie/

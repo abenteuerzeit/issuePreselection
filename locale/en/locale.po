@@ -44,14 +44,38 @@ msgstr "Assigned Editors"
 msgid "plugins.generic.issuePreselection.settings.editedByDescription"
 msgstr "Select editors who will be automatically assigned to submissions for this issue."
 
-msgid "plugins.generic.issuePreselection.settings.editedByHelp"
-msgstr "Hold Ctrl (Windows) or Cmd (Mac) to select multiple editors."
-
 msgid "plugins.generic.issuePreselection.error.invalidIssue"
 msgstr "The selected issue is not available for submission."
 
-msgid "plugins.generic.issuePreselection.error.required"
-msgstr "Please select an issue for your submission."
-
 msgid "plugins.generic.issuePreselection.error.issueRequired"
 msgstr "Please select an issue for your submission."
+
+msgid "plugins.generic.issuePreselection.settings.editedByClosedHelp"
+msgstr "Editors can only be changed while the issue is open for submissions."
+
+msgid "plugins.generic.issuePreselection.grid.assignEditors"
+msgstr "Assign editors"
+
+msgid "plugins.generic.issuePreselection.grid.isOpen"
+msgstr "Open for submissions"
+
+msgid "plugins.generic.issuePreselection.grid.isClosed"
+msgstr "Closed to submissions"
+
+msgid "plugins.generic.issuePreselection.grid.toggle"
+msgstr "Call for Papers"
+
+msgid "plugins.generic.issuePreselection.grid.open"
+msgstr "Open"
+
+msgid "plugins.generic.issuePreselection.grid.close"
+msgstr "Close"
+
+msgid "plugins.generic.issuePreselection.grid.confirmOpen"
+msgstr "Open this issue for submissions? Authors will be able to choose it when they submit, and you will be able to change its editors."
+
+msgid "plugins.generic.issuePreselection.grid.confirmClose"
+msgstr "Close this issue to submissions? Authors will no longer be able to choose it, and its editors cannot be changed until you open it again."
+
+msgid "plugins.generic.issuePreselection.error.issueClosed"
+msgstr "Editors cannot be changed because this issue is closed to submissions."
